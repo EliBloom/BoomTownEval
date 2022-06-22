@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./App.css";
+import "./styles/App.css";
 
 function App() {
   let [info, setInfo] = useState();
@@ -23,7 +23,7 @@ function App() {
     loadGitInfo();
   });
 
-  return <div className="App">{info}</div>;
+  return <div className="App">{info}herehere</div>;
 }
 
 export default App;
