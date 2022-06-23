@@ -2,14 +2,26 @@
   /* text-align: center; */
   display: flex;
   justify-content: left;
+  flex-direction: column;
   padding:2em;
 }
 
 #endpoint-input {
   /* text-align: center; */
-  width: 50em;
+  width: 20em;
 }
 
+#clear-text-button{
+  height: 100%;
+}
+
+.primary-fields-list{
+  flex-direction: column;
+}
+
+.endpoint-input-div{
+  flex-direction: row;
+}
 
 .App-header {
   background-color: #282c34;
