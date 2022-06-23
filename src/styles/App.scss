@@ -1,4 +1,4 @@
-.App {
+.app {
   /* text-align: center; */
   display: flex;
   justify-content: left;
@@ -6,9 +6,17 @@
   padding:2em;
 }
 
+.endpoint-input-div{
+  display: flex;
+  flex-direction: row;
+}
 #endpoint-input {
   /* text-align: center; */
   width: 20em;
+}
+
+#git-repo-avatar{
+  margin-right: 2em;
 }
 
 #clear-text-button{
@@ -22,15 +30,13 @@
 .endpoint-input-div{
   flex-direction: row;
 }
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.display-git-info{
+display: flex;
+  justify-content: left;
 }
+.fields{
+  justify-content: left;
+
+}
+
 
