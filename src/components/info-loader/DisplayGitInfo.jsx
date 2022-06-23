@@ -20,9 +20,7 @@ import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 export default function DisplayGitInfo({ json }) {
-  const baseUrl = "https://api.github.com/orgs/";
-  const [topLevelUrls, setTopLevelUrls] = useState();
-  const [primaryLoadError, setPrimaryLoadError] = useState("");
+  const [loadingUrlError, setloadingUrlError] = useState("");
   // const [baseJSON, setBaseJson] = useState({});
   const [lists, setLists] = useState();
   const [gitEndpoint, setGitEndpoint] = useState(
@@ -32,64 +30,76 @@ export default function DisplayGitInfo({ json }) {
   /**
    * gets the Urls that are on the orginizational level
    * */
-  function getTopLevelUrls() {
-    let topLevelUrlsArr = Object.keys(RelevantFields);
-    return topLevelUrlsArr;
+  function getTopLevelUrlsKeys() {
+    let topLevelUrlkeysArr = Object.keys(RelevantFields);
+    return topLevelUrlkeysArr;
   }
 
   /**
    * creates the nested lists for the required fields found from wetching the top level usrl's
    * */
   function createFieldsLists() {
-    let topLevelUrls = getTopLevelUrls();
+    let topLevelUrls = getTopLevelUrlsKeys();
 
     let elements = (
-      <List
-        className="fields"
-        subheader={
-          <ListSubheader component="div" id="nested-list-subheader">
-            Top Level URL's
-          </ListSubheader>
-        }
-      >
-        {topLevelUrls.map((url) => {
-          if (Object.keys(json).length !== 0) {
-            let newUrl = json[url];
-            let info = loadGitInfo(newUrl);
-
-            return (
-              <>
-                <ListItem key={info?.id}>
-                  <ListItemIcon>
-                    <SquareIcon fontSize="1px" />
-                  </ListItemIcon>
-                  <ListItemText>{url}</ListItemText>
-                  <List>
-                    {RelevantFields[url].map((item) => {
-                      console.log(item);
-                      if (typeof item === "string" || item instanceof String) {
-                        return (
-                          <>
-                            <ListItem>
-                              <ListItemIcon>
-                                <SquareIcon fontSize="1px" />
-                              </ListItemIcon>
-                              <ListItemText>
-                                {item}: {info[item]}
-                              </ListItemText>
-                            </ListItem>
-                          </>
-                        );
-                      }
-                    })}
-                  </List>
-                </ListItem>
-                <Divider />
-              </>
-            );
+      <div className="top-level-url-fields-div">
+        <List
+          className="top-level-url-fields"
+          subheader={
+            <ListSubheader component="div" id="nested-list-subheader">
+              Top Level URL's
+            </ListSubheader>
           }
-        })}
-      </List>
+        >
+          {/* map over the keys from the provided json file, which will give props to grab off json object */}
+          {topLevelUrls.map((urlKey) => {
+            if (Object.keys(json).length !== 0) {
+              let newUrl = json[urlKey];
+              let loadedFieldsArr = loadFieldsArr(newUrl);
+              let returnedElement;
+
+              loadedFieldsArr.length === 0
+                ? (returnedElement = (
+                    <div>Can't load resources for: {urlKey}</div>
+                  ))
+                : (returnedElement = (
+                    <>
+                      <ListItem key={loadedFieldsArr?.id}>
+                        <ListItemIcon>
+                          <SquareIcon fontSize="1px" />
+                        </ListItemIcon>
+                        <ListItemText>{urlKey}</ListItemText>
+                        <List>
+                          {RelevantFields[urlKey].map((item) => {
+                            console.log(item);
+                            if (
+                              typeof item === "string" ||
+                              item instanceof String
+                            ) {
+                              return (
+                                <>
+                                  <ListItem>
+                                    <ListItemIcon>
+                                      <SquareIcon fontSize="1px" />
+                                    </ListItemIcon>
+                                    <ListItemText>
+                                      {item}: {loadedFieldsArr[item]}
+                                    </ListItemText>
+                                  </ListItem>
+                                </>
+                              );
+                            }
+                          })}
+                        </List>
+                      </ListItem>
+                      <Divider />
+                    </>
+                  ));
+              return returnedElement;
+            }
+          })}
+        </List>
+      </div>
     );
     return elements;
   }
@@ -99,18 +109,16 @@ export default function DisplayGitInfo({ json }) {
    * */
   function recursiveHelper() {}
 
-  async function loadGitInfo(url) {
+  async function loadFieldsArr(url) {
     if (url) {
       let response = await fetch(url);
 
       let json = await response.json();
       if (!response.ok) {
-        console.log("errr");
+        return [];
       } else {
         return json;
       }
-
-      console.log(json);
     }
   }
 

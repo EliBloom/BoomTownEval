@@ -191,9 +191,9 @@ export default function App() {
           </ListItem>
         </List>
       </div>
-      {/* {Object.keys(baseJson).length > 0 && (
+      {Object.keys(baseJson).length > 0 && (
         <DisplayGitInfo className="display-git-info" json={baseJson} />
-      )} */}
+      )}
     </div>
   );
 }
