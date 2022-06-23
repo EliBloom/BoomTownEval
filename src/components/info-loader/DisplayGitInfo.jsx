@@ -42,6 +42,7 @@ export default function DisplayGitInfo({ json }) {
    * */
   function createFieldsLists() {
     let topLevelUrls = getTopLevelUrls();
+
     let elements = (
       <List
         className="fields"

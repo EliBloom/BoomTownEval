@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./styles/App.scss";
 import DisplayGitInfo from "./components/info-loader/DisplayGitInfo";
+import { CustomSwitch } from "./components/info-loader/switch";
+
+//MUI imports
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import ClearIcon from "@mui/icons-material/Clear";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
@@ -14,22 +16,32 @@ import ListSubheader from "@mui/material/ListSubheader";
 import Avatar from "@mui/material/Avatar";
 import Switch from "@mui/material/Switch";
 import Alert from "@mui/material/Alert";
-
 import SquareIcon from "@mui/icons-material/Square";
 
+/**
+ * The main container for the app, handles initial fet from given url, and manually renders
+ * the fields on the returned JSON since those fields will be the same for different organizations
+ *
+ * @returns the over all app component
+ */
 export default function App() {
   const baseUrl = "https://api.github.com/orgs/";
   const [primaryLoadError, setPrimaryLoadError] = useState("");
   const [baseJson, setBaseJson] = useState({});
   const [isCreatedByNewer, setIsCreatedByNewer] = useState(false);
   const [isUpdatedByNewer, setIsUpdatedByNewer] = useState(false);
+  const [userInput, setUserInput] = useState(
+    "https://api.github.com/orgs/boomtownroi"
+  );
 
   const [gitEndpoint, setGitEndpoint] = useState(
     "https://api.github.com/orgs/boomtownroi"
   );
-  const [isAccountVerified, setIsAccontVerified] = useState(false);
+  //For displaying whether or not the organization in the url is verified
+  const [isAccountVerified, setIsAccontVerified] = useState(true);
+
   /**
-   *
+   * Makes a fetch with the given url to a git account
    * */
   async function loadBaseJson() {
     if (gitEndpoint.includes(baseUrl)) {
@@ -40,31 +52,37 @@ export default function App() {
         setPrimaryLoadError(response.status);
       } else {
         setBaseJson(json);
-        setIsAccontVerified(true);
+        setIsAccontVerified(json.is_verified);
+        json.created_at > json.updated_at
+          ? setIsCreatedByNewer(true)
+          : setIsUpdatedByNewer(true);
       }
     }
   }
 
   useEffect(() => {
     loadBaseJson();
-  });
+  }, [gitEndpoint]);
 
   /*********************************
-  * Event Handlers
-  /*********************************
+   * Event Handlers
+   *********************************/
 
-  /**
-   * 
-   * */
   function clearGitEndpoint() {
     setGitEndpoint("");
   }
-  function changeEndpoint(event) {
-    setGitEndpoint(event.target.value);
+
+  function changeEndpoint() {
+    setGitEndpoint(userInput);
   }
+
   function closeErrorAlert() {
     setPrimaryLoadError("");
   }
+
+  const handleUserInput = (event) => {
+    setUserInput(event.target.value);
+  };
 
   return (
     <div className="app">
@@ -80,9 +98,13 @@ export default function App() {
           id="endpoint-input"
           label="Enter Desired Endpoint"
           varient="filled"
-          defaultValue={gitEndpoint}
-          value={gitEndpoint}
-          onChange={changeEndpoint}
+          value={userInput}
+          onChange={handleUserInput}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              changeEndpoint();
+            }
+          }}
         ></TextField>
         <Button
           id="clear-text-button"
@@ -133,10 +155,13 @@ export default function App() {
               <SquareIcon fontSize="1px" />
             </ListItemIcon>
             <ListItemText>
-              Account Verified:{" "}
-              <Switch label="sdf" disabled={!isAccountVerified} />
+              Organization Verified:
+              <CustomSwitch
+                sx={{ m: 1 }}
+                checked={isAccountVerified}
+                disabled={true}
+              />
             </ListItemText>
-            {/* <ListItemText>Verified Account: {baseJson.is_verified}</ListItemText> */}
           </ListItem>
           <Divider />
           <ListItem>
@@ -158,7 +183,7 @@ export default function App() {
             </ListItemIcon>
             {isUpdatedByNewer ? (
               <ListItemText>
-                updated_at: {baseJson.updated_at} **Newer Field**
+                Updated_at: {baseJson.updated_at} **Newer Field**
               </ListItemText>
             ) : (
               <ListItemText>updated_at: {baseJson.updated_at}</ListItemText>
@@ -166,7 +191,9 @@ export default function App() {
           </ListItem>
         </List>
       </div>
-      {/* <DisplayGitInfo className="display-git-info" json={baseJson} /> */}
+      {/* {Object.keys(baseJson).length > 0 && (
+        <DisplayGitInfo className="display-git-info" json={baseJson} />
+      )} */}
     </div>
   );
 }
