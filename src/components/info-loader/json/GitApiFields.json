@@ -1,0 +1,43 @@
+{
+    "repos_url": [
+        "id",
+        "name",
+        "html_url",
+        "description",
+        "language",
+        "created_at",
+        "updated_at",
+        "pushed_at"
+    ],
+    "events_url": [
+        "id",
+        "type",
+        {
+            "repo": [
+                "name",
+                "url"
+            ]
+        },
+        "created_at"
+    ],
+    "hooks_url": [],
+    "issues_url": [],
+    "public_members_url": [
+        "id",
+        "login",
+        "avatar_url",
+        "html_url",
+        "type",
+        "site_admin"
+    ],
+    "members_url": [
+        "id",
+        "login",
+        "avatar_url",
+        "html_url",
+        "type",
+        "site_admin"
+    ],
+    "avatar_url":[]
+    
+}
