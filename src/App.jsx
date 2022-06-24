@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import "./styles/App.scss";
 import DisplayGitInfo from "./components/info-loader/DisplayGitInfo";
 import { CustomSwitch } from "./components/info-loader/switch";
@@ -14,7 +14,6 @@ import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
 import ListSubheader from "@mui/material/ListSubheader";
 import Avatar from "@mui/material/Avatar";
-import Switch from "@mui/material/Switch";
 import Alert from "@mui/material/Alert";
 import SquareIcon from "@mui/icons-material/Square";
 
@@ -41,7 +40,7 @@ export default function App() {
   const [isAccountVerified, setIsAccontVerified] = useState(true);
 
   /**
-   * Makes a fetch with the given url to a git account
+   * Makes a fetch with the given url to a git account in order to get base JSON data
    * */
   async function loadBaseJson() {
     if (gitEndpoint.includes(baseUrl)) {
