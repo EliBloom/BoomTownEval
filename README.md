@@ -1,4 +1,4 @@
-# BoomTown take home evaluation
+# GIT API UI
 
 This is an app that has a single text input for receiving a url to a github repo
 
